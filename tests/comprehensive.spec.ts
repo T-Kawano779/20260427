@@ -27,7 +27,7 @@ test.describe('Playwright 実装検証', () => {
     
     // 表示とスタイルの検証
     await expect(btn).toBeVisible();
-    const expectedColor = isMobile ? 'rgb(192, 192, 192)' : /rgb\(239, 239, 239\)|rgb\(240, 240, 240\)/;
+    const expectedColor = 'rgb(240, 240, 240)';
     await expect(btn).toHaveCSS('background-color', expectedColor);
     
     // 操作の模倣

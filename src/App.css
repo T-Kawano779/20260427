@@ -53,6 +53,7 @@ header h1 {
 .btn-counter {
   padding: 0.25rem 0.5rem;
   font-size: 0.9rem;
+  background-color: #f0f0f0;
 }
 
 /* ファイル入力欄を少しコンパクトに */
