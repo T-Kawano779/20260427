@@ -21,7 +21,7 @@ test.describe('Playwright 実装検証', () => {
   });
 
   // 1. E2Eテスト: 操作、遷移、状態、スタイルの検証
-  test('E2E: カウントアップとスタイル検証', async ({ page, isMobile }) => {
+  test('E2E: カウントアップとスタイル検証', async ({ page }) => {
     // 要素を変数に格納することで、テキスト変更後の再検索エラーを防ぐ
     const btn = page.getByRole('button', { name: /count is/i });
     
