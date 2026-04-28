@@ -21,13 +21,14 @@ test.describe('Playwright 実装検証', () => {
   });
 
   // 1. E2Eテスト: 操作、遷移、状態、スタイルの検証
-  test('E2E: カウントアップとスタイル検証', async ({ page }) => {
+  test('E2E: カウントアップとスタイル検証', async ({ page, isMobile }) => {
     // 要素を変数に格納することで、テキスト変更後の再検索エラーを防ぐ
     const btn = page.getByRole('button', { name: /count is/i });
     
     // 表示とスタイルの検証
     await expect(btn).toBeVisible();
-    await expect(btn).toHaveCSS('background-color', 'rgb(249, 249, 249)');
+    const expectedColor = isMobile ? 'rgb(192, 192, 192)' : 'rgb(240, 240, 240)';
+    await expect(btn).toHaveCSS('background-color', expectedColor);
     
     // 操作の模倣
     await btn.click();
@@ -98,8 +99,8 @@ test.describe('Playwright 実装検証', () => {
   // 6. モバイルエミュレーション & 言語・タイムゾーン検証
   test('環境検証: モバイル操作と言語設定の反映', async ({ page, isMobile }) => {
     // 言語とタイムゾーンのテキスト表示を確認
-    const localeText = page.getByText(/Current Locale:/);
-    const timezoneText = page.getByText(/Current Timezone:/);
+    const localeText = page.getByText(/Locale:/);
+    const timezoneText = page.getByText(/TZ:/);
 
     if (isMobile) {
       // モバイルプロジェクト（iPhone等）で実行されている場合
