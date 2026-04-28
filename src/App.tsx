@@ -6,13 +6,11 @@ function App() {
   const [userName, setUserName] = useState('Loading...')
   const [isOffline, setIsOffline] = useState(!navigator.onLine)
 
-  // ネットワーク状態の監視 (ネットワーク制御テスト用)
   useEffect(() => {
     const updateOnlineStatus = () => setIsOffline(!navigator.onLine);
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     
-    // APIモックの検証用
     fetch('/api/user')
       .then(res => res.json())
       .then(data => setUserName(data.name))
@@ -24,7 +22,6 @@ function App() {
     };
   }, []);
 
-  // 疑似ダウンロード処理
   const handleDownload = () => {
     const blob = new Blob(['test content'], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
@@ -35,44 +32,51 @@ function App() {
   };
 
   return (
-    <div className="App">
-      <h1>Playwright Demo</h1>
+    <div className="container">
+      <header>
+        <h1>Playwright Demo</h1>
+      </header>
 
-      {/* E2E / スタイル検証用 */}
-      <section className="card">
-        <button 
-          onClick={() => setCount((count) => count + 1)}
-          style={{ backgroundColor: '#f9f9f9', color: '#333' }}
-        >
-          count is {count}
-        </button>
-        <p>Button is {count > 5 ? 'Active' : 'Normal'}</p>
-      </section>
+      <main className="grid-layout">
+        {/* 各セクションを独立したカードとして配置 */}
+        <section className="card">
+          <h2>Counter</h2>
+          <button 
+            className="btn-counter"
+            onClick={() => setCount((count) => count + 1)}
+          >
+            count is {count}
+          </button>
+          <p>Status: {count > 5 ? 'Active' : 'Normal'}</p>
+        </section>
 
-      {/* ネットワーク/モック検証用 */}
-      <section className="card">
-        <p>User Name: <span data-testid="user-name">{userName}</span></p>
-        {isOffline && <p style={{ color: 'red' }}>You are offline</p>}
-      </section>
+        <section className="card">
+          <h2>Network</h2>
+          <p>User: <span data-testid="user-name">{userName}</span></p>
+          {isOffline && <p className="offline-alert">You are offline</p>}
+        </section>
 
-      {/* ファイル操作検証用 */}
-      <section className="card">
-        <input type="file" aria-label="file-upload" />
-        <button onClick={handleDownload}>Download File</button>
-      </section>
+        <section className="card">
+          <h2>Files</h2>
+          <div className="stack">
+            <input type="file" aria-label="file-upload" />
+            <button onClick={handleDownload}>Download File</button>
+          </div>
+        </section>
 
-      {/* 複数タブ検証用 */}
-      <section className="card">
-        <a href="https://playwright.dev" target="_blank" rel="noreferrer">
-          Open New Tab
-        </a>
-      </section>
+        <section className="card">
+          <h2>Links</h2>
+          <a href="https://playwright.dev" target="_blank" rel="noreferrer" className="link-btn">
+            Open New Tab
+          </a>
+        </section>
 
-      {/* 言語設定検証用 */}
-      <section className="card">
-        <p>Current Locale: {Intl.DateTimeFormat().resolvedOptions().locale}</p>
-        <p>Current Timezone: {Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
-      </section>
+        <section className="card">
+          <h2>Locales</h2>
+          <p>Locale: {Intl.DateTimeFormat().resolvedOptions().locale}</p>
+          <p>TZ: {Intl.DateTimeFormat().resolvedOptions().timeZone}</p>
+        </section>
+      </main>
     </div>
   )
 }
