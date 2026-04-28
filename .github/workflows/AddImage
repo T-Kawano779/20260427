@@ -1,0 +1,37 @@
+name: Playwright Tests(GetImage)
+on:
+  # 【重要】GitHub画面から手動実行できるようにする
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        # 実行時、手動起動だった場合のみ --update-snapshots を付与する
+        run: npx playwright test ${{ github.event_name == 'workflow_dispatch' && '--update-snapshots' || '' }}
+
+      # 【重要】手動実行で画像が変わった場合、GitHubが自動でコミットしてリポジトリに戻す
+      - name: Commit changes
+        if: github.event_name == 'workflow_dispatch'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update playwright snapshots [skip ci]"
+          file_pattern: "**/snapshots/*.png"
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
